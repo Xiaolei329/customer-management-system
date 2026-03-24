@@ -1,0 +1,78 @@
+body, div, table, tr, td {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('../image/bg_image.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.login {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 300px;
+    max-width: 90%;
+}
+
+.denglu {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login input[type="text"],
+.login input[type="password"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login input[type="text"]:focus,
+.login input[type="password"]:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+
+.login input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#msg {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#verifyCodeImage {
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .login {
+        width: 100%;
+        padding: 15px;
+    }
+}

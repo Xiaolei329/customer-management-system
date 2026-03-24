@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.CustomMapper">
+
+    <select id="findById" resultType="com.entity.CustomEntity">
+        select * from  custom_t WHERE cust_id = #{cust_id}
+    </select>
+
+    <select id="findAll" resultType="com.entity.CustomEntity" >
+        select  * from  custom_t
+        where 1=1
+        <if test="cust_name !=null and cust_name !=''">
+            and cust_name like concat('%', #{cust_name},'%')
+        </if>
+        <if test="cust_source !=null and cust_source !=''">
+            and cust_source = #{cust_source}
+        </if>
+        <if test="cust_industry !=null and cust_industry !=''">
+            and cust_industry = #{cust_industry}
+        </if>
+        <if test="cust_level !=null and cust_level !=''">
+            and cust_level = #{cust_level}
+        </if>
+
+    </select>
+
+    <delete id="deleteById" >
+        delete from custom_t where cust_id = #{cust_id}
+    </delete>
+
+    <insert id="add"  parameterType="com.entity.CustomEntity">
+        insert into custom_t (cust_name, cust_user_id, cust_create_id, cust_source, cust_industry, cust_level, cust_linkman, cust_phone,
+                              cust_mobile, cust_zipcode, cust_address) values
+            (#{cust_name}, #{cust_user_id}, #{cust_create_id}, #{cust_source}, #{cust_industry}, #{cust_level}, #{cust_linkman}, #{cust_phone}
+            , #{cust_mobile}, #{cust_zipcode}, #{cust_address})
+    </insert>
+
+    <update id="updateById"  parameterType="com.entity.CustomEntity">
+        update custom_t set cust_name = #{cust_name}, cust_source = #{cust_source},
+                            cust_industry = #{cust_industry},
+                            cust_level =  #{cust_level},
+                            cust_linkman =  #{cust_linkman},
+                            cust_phone =  #{cust_phone},
+                            cust_mobile =  #{cust_mobile},
+                            cust_zipcode =  #{cust_zipcode},
+                            cust_address =  #{cust_address}
+        where cust_id = #{cust_id}
+    </update>
+
+</mapper>

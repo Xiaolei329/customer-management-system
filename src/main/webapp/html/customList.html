@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>客户管理</title>
+    <link href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css" rel="stylesheet" />
+    <script src="https://www.layuicdn.com/layui-v2.5.6/layui.js"></script>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+</head>
+
+<body>
+    <div class="page-content-wrap" id="studentSearch">
+        <h5 style="text-align:center;font-size: 20px;line-height: 25px;color:#666">客户管理</h5>
+        <hr>
+        <div>
+
+            <fieldset class="layui-elem-field layui-field-title" >
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label layui-inline">客户姓名</label>
+                    <div class="layui-input-block layui-inline">
+                        <input type="text" id="cust_name" placeholder="请输入客户姓名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label layui-inline">客户来源</label>
+                    <div class="layui-inline layui-input-block">
+                        <select name="cust_source" id="cust_source"  lay-search="" class="layui-input layui-inline">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label layui-inline">所属行业</label>
+                    <div class="layui-inline layui-input-block">
+                        <select name="cust_industry" id="cust_industry"  lay-search="" class="layui-input layui-inline">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label layui-inline">客户级别</label>
+                    <div class="layui-inline layui-input-block">
+                        <select name="cust_level" id="cust_level"  lay-search="" class="layui-input layui-inline">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="layui-btn layui-btn-normal site-demo-active"
+                        data-type="search" id="searchCustom">搜索</button>
+
+            </fieldset>
+
+            <!--  新增按钮 -->
+            <div class="layui-inline tool-btn">
+                <button class="layui-btn layui-btn-small site-demo-active" id="add">新建</button>
+            </div>
+           <!--   主体表格         -->
+            <table id="demoTable" lay-filter="test" ></table>
+        </div>
+
+        <hr></hr>
+        <h5 style="text-align: center;">客户管理系统</h5>
+    </div>
+
+
+
+    <script>
+        layui.use(['layer','form', 'table'], function() {
+            var table = layui.table;
+            var $ = layui.jquery;
+            var form = layui.form;
+            var layer = layui.layer;
+
+            // 加载下拉框
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/NewSSMBOOT_war/dictionary/CustomSourceAndIndustryAndLevel", //url
+                data: {},
+                success: function (result) {
+                    if (result.code === 0) {
+                        console.log(result.data);
+                        var data = result.data;
+                        if(data.customSourceList.length > 0){
+                            for(i=0; i< data.customSourceList.length; i++){
+                                var temp = data.customSourceList[i];
+                                $("#cust_source").append("<option  value='" + temp + "'>" + temp + "</option>");
+                            }
+                        }
+                        if(data.customSourceList.length > 0){
+                            for(i=0; i< data.customIndustryList.length; i++){
+                                var temp = data.customIndustryList[i];
+                                $("#cust_industry").append("<option  value='" + temp + "'>" + temp + "</option>");
+                            }
+                        }
+                        if(data.customSourceList.length > 0){
+                            for(i=0; i< data.customLevelList.length; i++){
+                                var temp = data.customLevelList[i];
+                                $("#cust_level").append("<option  value='" + temp + "'>" + temp + "</option>");
+                            }
+                        }
+                        layui.form.render();
+                    }else{
+                        layer.msg('加载下拉框失败', {icon: 5});
+                    }
+                }
+            });
+
+            table.render({
+                elem: '#demoTable'
+                , url: '/NewSSMBOOT_war/custom/list'
+                , title: '客户信息表'
+                , page: true
+                , cols: [[
+                      {field: 'cust_id', title: '编号', width: 100, sort: true, fixed: 'left'}
+                    , {field: 'cust_name', title: '客户名称', width: 100}
+                    , {field: 'cust_source', title: '客户来源', width: 150}
+                    , {field: 'cust_industry', title: '客户所属行业', width: 150}
+                    , {field: 'cust_level', title: '客户级别', width: 150}
+                    , {field: 'cust_linkman', title: '联系人', width: 150,  hide:true}
+                    , {field: 'cust_phone', title: '固定电话', width: 150}
+                    , {field: 'cust_mobile', title: '手机', width: 150}
+                    , {field: 'cust_zipcode', title: '邮政编码', width: 150,  hide:true}
+                    , {field: 'cust_address', title: '联系地址', width: 150,  hide:true}
+                    , {fixed: 'right',title: '操作', width:150, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+                ]]
+            });
+
+            // 表格事件监听
+            table.on('tool(test)', function(obj){
+                var data = obj.data;
+                var layEvent = obj.event;
+                var layer = layui.layer;
+
+              if(layEvent === 'del'){
+                    layer.confirm('真的删除该客户吗？', function(index) {
+                        var data = obj.data;
+                        var $ = layui.jquery;
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: "/NewSSMBOOT_war/custom/delete", //url
+                            data: data,
+                            success: function (result) {
+                                if (result.code === 0) {
+                                    obj.del();
+                                    layer.close(index);
+                                    layer.msg('删除客户成功',{icon: 6, time:2000});
+                                }
+                            }
+                        });
+                    });
+                } else if(layEvent === 'edit'){
+                    var editFrom = layui.layer.open({
+                        title : "编辑客户信息",
+                        type : 2,
+                        content : "./customEdit.html",
+                        area: ['800px', '600px'],
+                        success : function(layero, index){
+                            var body = layui.layer.getChildFrame('body', index);
+                            var iframeWindow = layero.find('iframe')[0].contentWindow;
+                            body.find("#customId").val(data.cust_id);
+                            body.find("#customName").val(data.cust_name);
+                            body.find("#cust_source1").val(data.cust_source);
+                            body.find("#cust_industry1").val(data.cust_industry);
+                            body.find("#cust_level1").val(data.cust_level);
+                            body.find("#custLinkman").val(data.cust_linkman);
+                            body.find("#custPhone").val(data.cust_phone);
+                            body.find("#custMobile").val(data.cust_mobile);
+                            body.find("#custZipcode").val(data.cust_zipcode);
+                            body.find("#custAddress").val(data.cust_address);
+                            iframeWindow.layui.form.render();
+                        }});
+                }
+            });
+
+            $(document).on('click', '#add', function(){
+                    layer.open({
+                        type: 2,
+                        title: '添加客户信息',
+                        shadeClose: true,
+                        area: ['800px', '600px'],
+                        content : "./customAdd.html",
+                    });
+            });
+
+            $(document).on('click', '#searchCustom', function(){
+                var cust_name =$("#cust_name").val();
+                var cust_source =$("#cust_source").val();
+                var cust_industry =$("#cust_industry").val();
+                var cust_level =$("#cust_level").val();
+                console.log(cust_name);
+
+                table.reload('demoTable', {
+                    method: 'POST',
+                    where: {"cust_name":cust_name, "cust_source":cust_source,"cust_industry":cust_industry,"cust_level":cust_level},
+                    page: {
+                        curr: 1
+                    }
+                })
+            });
+        });
+        
+    </script>
+</body>
+
+</html>
